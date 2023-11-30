@@ -1,7 +1,14 @@
 package htw.ai.softwarearchitekturen.LocalWords.ProductService.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
+@Entity
 public class Product {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
     private String name;
@@ -13,6 +20,8 @@ public class Product {
     private int availability;
 
     private int discount;
+
+    private String imageLink;
 
     public int getId() {
         return id;
@@ -63,4 +72,11 @@ public class Product {
     }
 
 
+    public String getImageLink() {
+        return imageLink;
+    }
+
+    public void setImageLink(String imageLink) {
+        this.imageLink = imageLink;
+    }
 }
