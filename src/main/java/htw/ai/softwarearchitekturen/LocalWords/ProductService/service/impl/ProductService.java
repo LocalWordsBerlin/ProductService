@@ -3,9 +3,10 @@ package htw.ai.softwarearchitekturen.LocalWords.ProductService.service.impl;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.model.Product;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.service.interfaces.IProductRepository;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.service.interfaces.IProductService;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-
+@Service
 public class ProductService implements IProductService {
     private final IProductRepository productRepository;
 
