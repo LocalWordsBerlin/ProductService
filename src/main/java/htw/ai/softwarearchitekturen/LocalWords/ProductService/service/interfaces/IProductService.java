@@ -2,14 +2,20 @@ package htw.ai.softwarearchitekturen.LocalWords.ProductService.service.interface
 
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.model.Product;
 
+import java.util.UUID;
+
 public interface IProductService {
-    void createProduct (Product product);
+    Product createProduct (Product product);
 
-    void updateProduct (Product product);
+    Product updateProduct (Product product);
 
-    void deleteProduct (Product product);
+    void deleteProduct (UUID id);
 
-    Product getProduct(int id);
+    Product getProduct(UUID id);
 
     Iterable<Product> getAllProducts();
+
+    void addStock(UUID id, int quantity);
+
+    int getStock(UUID id);
 }

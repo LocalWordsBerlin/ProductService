@@ -3,5 +3,7 @@ package htw.ai.softwarearchitekturen.LocalWords.ProductService.service.interface
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.model.Product;
 import org.springframework.data.repository.CrudRepository;
 
-public interface IProductRepository extends CrudRepository<Product, Integer> {
+import java.util.UUID;
+
+public interface IProductRepository extends CrudRepository<Product, UUID> {
 }

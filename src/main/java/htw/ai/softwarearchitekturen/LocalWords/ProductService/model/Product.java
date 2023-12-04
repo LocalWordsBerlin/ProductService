@@ -1,15 +1,15 @@
 package htw.ai.softwarearchitekturen.LocalWords.ProductService.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.util.UUID;
 
 @Entity
+@Table(name = "product")
 public class Product {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    @GeneratedValue(strategy= GenerationType.UUID)
+    private UUID id;
 
     private String name;
 
@@ -17,17 +17,21 @@ public class Product {
 
     private String description;
 
-    private int availability;
+    private String language;
+
+    private int pages;
+
+    private int stock;
 
     private int discount;
 
     private String imageLink;
 
-    public int getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -55,12 +59,28 @@ public class Product {
         this.description = description;
     }
 
-    public int getAvailability() {
-        return availability;
+    public String getLanguage() {
+        return language;
     }
 
-    public void setAvailability(int availability) {
-        this.availability = availability;
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    public int getPages() {
+        return pages;
+    }
+
+    public void setPages(int pages) {
+        this.pages = pages;
+    }
+
+    public int getStock() {
+        return stock;
+    }
+
+    public void setStock(int stock) {
+        this.stock = stock;
     }
 
     public int getDiscount() {
