@@ -15,6 +15,8 @@ public class Product {
 
     private String isbn;
 
+    //private Author author;
+
     private String description;
 
     private String language;

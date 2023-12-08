@@ -1,4 +1,4 @@
-package htw.ai.softwarearchitekturen.LocalWords.ProductService.infrastructure.exception;
+package htw.ai.softwarearchitekturen.LocalWords.ProductService.port.exception;
 
 import java.util.UUID;
 

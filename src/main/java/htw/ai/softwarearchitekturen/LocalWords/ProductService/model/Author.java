@@ -1,18 +1,17 @@
 package htw.ai.softwarearchitekturen.LocalWords.ProductService.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Entity
+@Table(name = "author")
 public class Author {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
-    private int id;
+    @GeneratedValue(strategy= GenerationType.UUID)
+    private UUID id;
 
     private String firstName;
 
@@ -24,11 +23,11 @@ public class Author {
 
     private String description;
 
-    public int getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

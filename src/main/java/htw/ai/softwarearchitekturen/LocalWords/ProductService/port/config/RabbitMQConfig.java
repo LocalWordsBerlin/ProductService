@@ -1,4 +1,4 @@
-package htw.ai.softwarearchitekturen.LocalWords.ProductService.infrastructure.config;
+package htw.ai.softwarearchitekturen.LocalWords.ProductService.port.config;
 
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
@@ -11,29 +11,29 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMQConfig {
 
-    @Value("product")
-    private String queue;
+    @Value("${rabbitmq.updateQueue.name}")
+    private String updateQueue;
 
-    @Value("item")
-    private String itemQueue;
+    @Value("${rabbitmq.addToCartQueue.name}")
+    private String addToCartQueue;
 
-    @Value("product_exchange")
+    @Value("${rabbitmq.exchange.name}")
     private String exchange;
 
-    @Value("product_routing_key")
-    private String routingKey;
+    @Value("${rabbitmq.routing.updateKey}")
+    private String updateRoutingKey;
 
-    @Value("item_routing_key")
-    private String itemRoutingKey;
+    @Value("${rabbitmq.routing.addToCartKey}")
+    private String addToCartRoutingKey;
 
     @Bean
-    public Queue queue(){
-        return new Queue(queue);
+    public Queue updateQueue(){
+        return new Queue(updateQueue);
     }
 
     @Bean
-    public Queue itemQueue(){
-        return new Queue(itemQueue);
+    public Queue addToCartQueue(){
+        return new Queue(addToCartQueue);
     }
 
     @Bean
@@ -44,17 +44,17 @@ public class RabbitMQConfig {
     @Bean
     public Binding binding(){
         return BindingBuilder
-                .bind(queue())
+                .bind(updateQueue())
                 .to(exchange())
-                .with(routingKey);
+                .with(updateRoutingKey);
     }
 
     @Bean
     public Binding itemBinding(){
         return BindingBuilder
-                .bind(itemQueue())
+                .bind(addToCartQueue())
                 .to(exchange())
-                .with(itemRoutingKey);
+                .with(addToCartRoutingKey);
     }
 
 }

@@ -1,7 +1,7 @@
 package htw.ai.softwarearchitekturen.LocalWords.ProductService.service.impl;
 
-import htw.ai.softwarearchitekturen.LocalWords.ProductService.infrastructure.exception.ProductNotFoundException;
-import htw.ai.softwarearchitekturen.LocalWords.ProductService.infrastructure.producer.IProductProducer;
+import htw.ai.softwarearchitekturen.LocalWords.ProductService.port.exception.ProductNotFoundException;
+import htw.ai.softwarearchitekturen.LocalWords.ProductService.port.producer.admin.IProductProducer;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.model.Product;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.service.interfaces.IProductRepository;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.service.interfaces.IProductService;
@@ -13,19 +13,18 @@ import java.util.UUID;
 @Service
 public class ProductService implements IProductService {
     private final IProductRepository productRepository;
-    private IProductProducer productProducer;
+    private final IProductProducer productProducer;
 
-    ProductService(IProductRepository productRepository){
+    ProductService(IProductRepository productRepository, IProductProducer productProducer){
         this.productRepository = productRepository;
+        this.productProducer = productProducer;
     }
     @Override
     public Product createProduct(Product product) {
-        if (!productRepository.findById(product.getId()).isEmpty()) {
-            productProducer.sendMessage(product.toString());
-            return productRepository.save(product);
-        }
+        Product savedProduct = productRepository.save(product);
+        productProducer.sendMessage(product.toString());
         //return ProductAlreadyExistsException
-        return null;
+        return savedProduct;
     }
 
     @Override
@@ -63,6 +62,7 @@ public class ProductService implements IProductService {
         Product product = null;
         if(result.isPresent()){
             product = result.get();
+            product.setStock(product.getStock()+quantity);
         }
         else {
             throw new ProductNotFoundException(id);
