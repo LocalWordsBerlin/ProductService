@@ -17,6 +17,9 @@ public class RabbitMQConfig {
     @Value("${rabbitmq.addToCartQueue.name}")
     private String addToCartQueue;
 
+    @Value("${rabbitmq.stockQueue.name}")
+    private String stockQueue;
+
     @Value("${rabbitmq.exchange.name}")
     private String exchange;
 
@@ -34,6 +37,11 @@ public class RabbitMQConfig {
     @Bean
     public Queue addToCartQueue(){
         return new Queue(addToCartQueue);
+    }
+
+    @Bean
+    public Queue stockQueue(){
+        return new Queue(stockQueue);
     }
 
     @Bean
