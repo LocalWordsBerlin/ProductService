@@ -1,8 +1,11 @@
 package htw.ai.softwarearchitekturen.LocalWords.ProductService.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -19,9 +22,26 @@ public class Author {
 
     private LocalDate dateOfBirth;
 
-    private String adress;
+    private String district;
+
+    private String plz;
 
     private String description;
+    /*
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade= {CascadeType.PERSIST, CascadeType.MERGE,
+                    CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinTable(
+            name = "product_author",
+            joinColumns = @JoinColumn(name = "author_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id"))
+    private Set<Product> products = new HashSet<>();
+     */
+    @ElementCollection
+    @CollectionTable(name = "author_product", joinColumns = @JoinColumn(name = "author_id"))
+    @Column(name = "product_id")
+    private Set<UUID> products = new HashSet<>();
+
 
     public UUID getId() {
         return id;
@@ -55,19 +75,35 @@ public class Author {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public String getAdress() {
-        return adress;
-    }
-
-    public void setAdress(String adress) {
-        this.adress = adress;
-    }
-
     public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
+    }
+
+    public String getPlz() {
+        return plz;
+    }
+
+    public void setPlz(String plz) {
+        this.plz = plz;
+    }
+
+    public Set<UUID> getProducts() {
+        return products;
+    }
+
+    public void setProducts(Set<UUID> products) {
+        this.products = products;
     }
 }

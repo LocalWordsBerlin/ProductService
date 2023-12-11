@@ -1,5 +1,6 @@
 package htw.ai.softwarearchitekturen.LocalWords.ProductService.service.impl;
 
+import htw.ai.softwarearchitekturen.LocalWords.ProductService.model.Author;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.port.exception.ProductNotFoundException;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.port.producer.admin.IProductProducer;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.model.Product;
@@ -8,6 +9,7 @@ import htw.ai.softwarearchitekturen.LocalWords.ProductService.service.interfaces
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -23,32 +25,32 @@ public class ProductService implements IProductService {
     public Product createProduct(Product product) {
         Product savedProduct = productRepository.save(product);
         productProducer.sendMessage(product.toString());
-        //return ProductAlreadyExistsException
         return savedProduct;
     }
 
     @Override
     public Product updateProduct(Product product) {
-        return productRepository.save(product);
-
+        Product savedProduct = productRepository.save(product);
+        productProducer.sendMessage(product.toString());
+        return savedProduct;
     }
 
     @Override
-    public void deleteProduct(UUID id) {
+    public void deleteProduct(UUID id) throws ProductNotFoundException{
         productRepository.deleteById(id);
     }
 
     @Override
-    public Product getProduct(UUID id) {
+    public Product getProduct(UUID id) throws ProductNotFoundException{
         Optional<Product> result = productRepository.findById(id);
         Product product = null;
         if(result.isPresent()){
             product = result.get();
+            return product;
         }
         else {
-            throw new RuntimeException("Product was not found");
+            throw new ProductNotFoundException(id);
         }
-        return product;
     }
 
     @Override
@@ -57,7 +59,7 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public void addStock(UUID id, int quantity) {
+    public void addStock(UUID id, int quantity) throws ProductNotFoundException{
         Optional<Product> result = productRepository.findById(id);
         Product product = null;
         if(result.isPresent()){
@@ -70,12 +72,21 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public int getStock(UUID id) {
-        Optional<Product> result= productRepository.findById(id);
-        Product product = null;
-        if(result.isPresent()){
-            product = result.get();
-        }
-        return product.getStock();
+    public int getStock(UUID id) throws ProductNotFoundException{
+        return getProduct(id).getStock();
+    }
+
+    @Override
+    public void addAuthor(UUID id, Author author) throws ProductNotFoundException {
+        Product product = getProduct(id);
+        Set<Author> authors = product.getAuthors();
+        authors.add(author);
+        product.setAuthors(authors);
+        updateProduct(product);
+    }
+
+    @Override
+    public Set<Author> getAuthors(UUID id) {
+        return getProduct(id).getAuthors();
     }
 }

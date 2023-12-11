@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
-
-//@PropertySource("src/main/resources/application.properties")
 @Service
 public class AddToCartProducer{
     @Value("${rabbitmq.exchange.name}")

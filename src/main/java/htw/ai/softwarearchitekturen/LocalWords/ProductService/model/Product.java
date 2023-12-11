@@ -1,7 +1,10 @@
 package htw.ai.softwarearchitekturen.LocalWords.ProductService.model;
 
 import jakarta.persistence.*;
+import htw.ai.softwarearchitekturen.LocalWords.ProductService.model.Author;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -15,7 +18,6 @@ public class Product {
 
     private String isbn;
 
-    //private Author author;
 
     private String description;
 
@@ -28,6 +30,16 @@ public class Product {
     private int discount;
 
     private String imageLink;
+
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade= {CascadeType.PERSIST, CascadeType.MERGE,
+                    CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinTable(
+            name = "product_author",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "author_id"))
+    private Set<Author> authors = new HashSet<>();
+
 
     public UUID getId() {
         return id;
@@ -100,5 +112,13 @@ public class Product {
 
     public void setImageLink(String imageLink) {
         this.imageLink = imageLink;
+    }
+
+    public Set<Author> getAuthors() {
+        return authors;
+    }
+
+    public void setAuthors(Set<Author> authors) {
+        this.authors = authors;
     }
 }

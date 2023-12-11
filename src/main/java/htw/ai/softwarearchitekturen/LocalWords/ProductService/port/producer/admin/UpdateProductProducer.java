@@ -5,12 +5,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 //@PropertySource("src/main/resources/application.properties")
 @Service
-public class UpdateProductProductProducer implements IProductProducer {
+public class UpdateProductProducer implements IProductProducer {
     @Value("${rabbitmq.exchange.name}")
     private String exchange;
 
@@ -21,7 +20,7 @@ public class UpdateProductProductProducer implements IProductProducer {
 
     private final RabbitTemplate rabbitTemplate;
 
-    public UpdateProductProductProducer(RabbitTemplate rabbitTemplate) {
+    public UpdateProductProducer(RabbitTemplate rabbitTemplate) {
         this.rabbitTemplate = rabbitTemplate;
     }
 

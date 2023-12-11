@@ -1,7 +1,9 @@
 package htw.ai.softwarearchitekturen.LocalWords.ProductService.service.interfaces;
 
+import htw.ai.softwarearchitekturen.LocalWords.ProductService.model.Author;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.model.Product;
 
+import java.util.Set;
 import java.util.UUID;
 
 public interface IProductService {
@@ -18,4 +20,8 @@ public interface IProductService {
     void addStock(UUID id, int quantity);
 
     int getStock(UUID id);
+
+    void addAuthor(UUID id, Author author);
+
+    Set<Author> getAuthors(UUID id);
 }
