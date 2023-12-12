@@ -16,19 +16,25 @@ public class Product {
 
     @Column(nullable = false)
     private String name;
+
     @Column(nullable = false, unique = true)
     private String isbn;
 
     @Column(nullable = false)
     private String description;
+
     @Column(nullable = false)
     private String language;
+
     @Column(nullable = false)
     private int pages;
+
     @Column(nullable = false)
     private int stock;
+
     @Column(nullable = false)
     private int discount;
+
     @Column
     private String imageLink;
 
