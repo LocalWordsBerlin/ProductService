@@ -24,4 +24,6 @@ public interface IProductService {
     void addAuthor(UUID id, Author author);
 
     Set<Author> getAuthors(UUID id);
+
+    Product getProductByIsbn(String isbn);
 }

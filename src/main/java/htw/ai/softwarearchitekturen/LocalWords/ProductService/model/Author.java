@@ -15,17 +15,17 @@ public class Author {
     @Id
     @GeneratedValue(strategy= GenerationType.UUID)
     private UUID id;
-
+    @Column(nullable = false)
     private String firstName;
-
+    @Column(nullable = false)
     private String lastName;
-
+    @Column
     private LocalDate dateOfBirth;
-
+    @Column
     private String district;
-
+    @Column
     private String plz;
-
+    @Column
     private String description;
     /*
     @ManyToMany(fetch = FetchType.LAZY,
@@ -37,6 +37,7 @@ public class Author {
             inverseJoinColumns = @JoinColumn(name = "product_id"))
     private Set<Product> products = new HashSet<>();
      */
+
     @ElementCollection
     @CollectionTable(name = "author_product", joinColumns = @JoinColumn(name = "author_id"))
     @Column(name = "product_id")

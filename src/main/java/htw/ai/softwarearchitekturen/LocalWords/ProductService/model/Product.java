@@ -14,23 +14,25 @@ public class Product {
     @GeneratedValue(strategy= GenerationType.UUID)
     private UUID id;
 
+    @Column(nullable = false)
     private String name;
-
+    @Column(nullable = false, unique = true)
     private String isbn;
 
-
+    @Column(nullable = false)
     private String description;
-
+    @Column(nullable = false)
     private String language;
-
+    @Column(nullable = false)
     private int pages;
-
+    @Column(nullable = false)
     private int stock;
-
+    @Column(nullable = false)
     private int discount;
-
+    @Column
     private String imageLink;
 
+    @Column(nullable = false)
     @ManyToMany(fetch = FetchType.LAZY,
             cascade= {CascadeType.PERSIST, CascadeType.MERGE,
                     CascadeType.DETACH, CascadeType.REFRESH})

@@ -89,4 +89,9 @@ public class ProductService implements IProductService {
     public Set<Author> getAuthors(UUID id) {
         return getProduct(id).getAuthors();
     }
+
+    @Override
+    public Product getProductByIsbn(String isbn) throws ProductNotFoundException{
+        return productRepository.findByIsbn(isbn);
+    }
 }

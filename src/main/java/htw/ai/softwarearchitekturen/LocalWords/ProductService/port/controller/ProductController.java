@@ -2,6 +2,7 @@ package htw.ai.softwarearchitekturen.LocalWords.ProductService.port.controller;
 
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.model.Author;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.port.exception.OutOfStockException;
+import htw.ai.softwarearchitekturen.LocalWords.ProductService.port.exception.ProductAlreadyExistsException;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.port.exception.ProductNotFoundException;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.port.producer.cart.AddToCartProducer;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.model.Product;
@@ -23,9 +24,17 @@ public class ProductController {
         @Autowired
         private AddToCartProducer addToCartProducer;
 
+        /*
+        - checks if product with given isbn already exists
+        - if not -> Repository creates product and returns it
+        - adds product id to all author instances listed in the author set
+         */
         @PostMapping(path = "/product")
         @ResponseStatus(HttpStatus.OK)
         public @ResponseBody Product create(@RequestBody Product product) {
+            Product alreadyExists = productService.getProductByIsbn(product.getIsbn());
+            if(alreadyExists!=null)
+                throw new ProductAlreadyExistsException(product.getIsbn());
             Product result = null;
             try{
                 result = productService.createProduct(product);
