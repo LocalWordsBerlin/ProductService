@@ -34,7 +34,7 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(AuthorNotFoundException.class)
     ResponseEntity<Object> handleAuthorNotFoundException(AuthorNotFoundException ex){
-        return new ResponseEntity<>(createResponseBody(ex), HttpStatus.NOT_FOUND)
+        return new ResponseEntity<>(createResponseBody(ex), HttpStatus.NOT_FOUND);
     }
 
     public Map<String, Object> createResponseBody(Exception exception){
