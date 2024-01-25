@@ -4,39 +4,27 @@ services:
   database:
     platform: linux/x86_64
     image: mysql:8.0
-    container_name: mysql
     ports:
-      - "3308:3306"
+      - "3307:3306"
     volumes:
       - ./:/app/
     environment:
-      MYSQL_DATABASE: <database>
-      MYSQL_USER: <username>
-      MYSQL_PASSWORD: <password>
-      MYSQL_ROOT_PASSWORD: <password>
-    networks:
-      - internal
-
-  rabbitmq-container:
-    image: rabbitmq:3.11-management
-    hostname: rabbitmq-container
-    ports:
-      - "15672:15672"
-      - "5672:5672"
+      MYSQL_DATABASE: product
+      MYSQL_USER: customer
+      MYSQL_PASSWORD: customer
+      MYSQL_ROOT_PASSWORD: customer
     networks:
       - internal
 
   app:
-    container_name: product
     command: java -jar target/demo-0.0.1-SNAPSHOT.jar
     build:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "8080:8080"
+      - "8082:8082"
     depends_on:
       - database
-      - rabbitmq-container
     volumes:
       - ./:/app/app
     links:
@@ -45,6 +33,8 @@ services:
       - internal
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://database:3306/product?useSSL=false&allowPublicKeyRetrieval=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+      - SPRING_DATASOURCE_USERNAME=customer
+      - SPRING_DATASOURCE_PASSWORD=customer
       - spring_rabbitmq_host=rabbitmq-container
       - spring_rabbitmq_port=5672
 

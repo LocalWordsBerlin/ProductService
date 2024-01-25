@@ -1,6 +1,7 @@
 package htw.ai.softwarearchitekturen.LocalWords.ProductService.service.impl;
 
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.model.Author;
+import htw.ai.softwarearchitekturen.LocalWords.ProductService.model.Product;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.port.exception.AuthorNotFoundException;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.service.interfaces.IAuthorRepository;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.service.interfaces.IAuthorService;
@@ -52,15 +53,19 @@ public class AuthorService implements IAuthorService {
         authorRepository.deleteById(id);
     }
 
-    public Iterable<UUID> getProducts(UUID authorId){
+    @Override
+    public Iterable<Product> getProducts(UUID authorId){
         return getAuthor(authorId).getProducts();
     }
 
-    public Iterable<UUID> addProduct(UUID authorId, UUID productId){
-        Author author = getAuthor(authorId);
-        Set<UUID> products = author.getProducts();
-        products.add(productId);
-        author.setProducts(products);
-        return update(author).getProducts();
+    @Override
+    public Author getAuthorByName(String name) {
+        Author author = authorRepository.findByFirstNameOrLastName(name, name);
+        if(author == null){
+            throw new AuthorNotFoundException(name);
+        }
+        return author;
     }
+
+
 }

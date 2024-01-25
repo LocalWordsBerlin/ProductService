@@ -27,22 +27,10 @@ public class Author {
     private String plz;
     @Column
     private String description;
-    /*
-    @ManyToMany(fetch = FetchType.LAZY,
-            cascade= {CascadeType.PERSIST, CascadeType.MERGE,
-                    CascadeType.DETACH, CascadeType.REFRESH})
-    @JoinTable(
-            name = "product_author",
-            joinColumns = @JoinColumn(name = "author_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id"))
+
+    @JsonIgnore
+    @ManyToMany(mappedBy = "authors")
     private Set<Product> products = new HashSet<>();
-     */
-
-    @ElementCollection
-    @CollectionTable(name = "author_product", joinColumns = @JoinColumn(name = "author_id"))
-    @Column(name = "product_id")
-    private Set<UUID> products = new HashSet<>();
-
 
     public UUID getId() {
         return id;
@@ -100,11 +88,11 @@ public class Author {
         this.plz = plz;
     }
 
-    public Set<UUID> getProducts() {
+    public Set<Product> getProducts() {
         return products;
     }
 
-    public void setProducts(Set<UUID> products) {
+    public void setProducts(Set<Product> products) {
         this.products = products;
     }
 }

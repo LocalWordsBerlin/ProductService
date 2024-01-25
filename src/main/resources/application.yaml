@@ -1,0 +1,35 @@
+#variable values must be equivalent to docker-compose.yaml file
+server:
+  port: 8082
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/product?useSSL=false&allowPublicKeyRetrieval=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+    username: customer
+    password: customer
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.MySQLDialect
+  security:
+    oauth2:
+      registration:
+        keycloak:
+          client-id: localwords_berlin
+          client-secret: AI9ki861wWuPtiKtSLj76SXDmlsMYTWi
+          authorization-grant-type: authorization_code
+          scope: openid
+      resource-server:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/localwords
+          jwk-set-uri: http://localhost:8080/realms/localwords/protocol/openid-connect/certs
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    exchange: exchange
+    queue: product
+    routing-key: routingKey
+
+

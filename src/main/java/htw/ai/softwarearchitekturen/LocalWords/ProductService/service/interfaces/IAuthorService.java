@@ -16,8 +16,10 @@ public interface IAuthorService {
 
     void delete(UUID id);
 
-    Iterable<UUID> addProduct(UUID authorId, UUID productId);
+    Iterable<Product> getProducts(UUID authorId);
 
-    Iterable<UUID> getProducts(UUID authorId);
+    Author getAuthorByName(String name);
+
+
 
 }
