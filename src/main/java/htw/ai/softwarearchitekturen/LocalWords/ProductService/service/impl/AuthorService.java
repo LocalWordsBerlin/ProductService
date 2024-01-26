@@ -13,8 +13,7 @@ import java.util.UUID;
 @Service
 public class AuthorService implements IAuthorService {
 
-    IAuthorRepository authorRepository;
-
+    private final IAuthorRepository authorRepository;
     public AuthorService(IAuthorRepository authorRepository) {
         this.authorRepository = authorRepository;
     }
@@ -27,13 +26,11 @@ public class AuthorService implements IAuthorService {
     @Override
     public Author getAuthor(UUID id) {
         Optional<Author> result = authorRepository.findById(id);
-        Author author = null;
-        if(result.isPresent()){
+        Author author;
+        if(result.isPresent())
             author = result.get();
-        }
-        else {
+        else
             throw new AuthorNotFoundException(id);
-        }
         return author;
     }
 
@@ -43,15 +40,16 @@ public class AuthorService implements IAuthorService {
     }
 
     @Override
-    public Author update(Author author) {
+    public Author update(Author author) throws AuthorNotFoundException {
         return authorRepository.save(author);
     }
 
     @Override
-    public void delete(UUID id) {
+    public void delete(UUID id) throws AuthorNotFoundException{
         authorRepository.deleteById(id);
     }
 
+<<<<<<< Updated upstream
     public Iterable<UUID> getProducts(UUID authorId){
         return getAuthor(authorId).getProducts();
     }
@@ -63,4 +61,31 @@ public class AuthorService implements IAuthorService {
         author.setProducts(products);
         return update(author).getProducts();
     }
+=======
+    @Override
+    public Iterable<Product> getProducts(UUID authorId) throws AuthorNotFoundException{
+        return getAuthor(authorId).getProducts();
+    }
+
+    @Override
+    public Author getAuthorByName(String name) throws AuthorNotFoundException{
+        Author author = authorRepository.findByFirstNameOrLastName(name, name);
+        if(author == null){
+            throw new AuthorNotFoundException(name);
+        }
+        return author;
+    }
+
+    @Override
+    public Iterable<Author> getAuthorsByDistrict(String district) throws AuthorNotFoundException{
+        return authorRepository.findByDistrict(district);
+    }
+
+    @Override
+    public Iterable<Author> getAuthorsByPlz(String plz) throws AuthorNotFoundException{
+        return authorRepository.findByPlz(plz);
+    }
+
+
+>>>>>>> Stashed changes
 }
