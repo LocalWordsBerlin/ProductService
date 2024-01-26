@@ -3,18 +3,25 @@ package htw.ai.softwarearchitekturen.LocalWords.ProductService.port.controller;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.model.Author;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.model.Product;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.service.impl.AuthorService;
+import jakarta.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
 @RestController
+@RequestMapping("/v1")
+@EnableWebSecurity
 public class AuthorController {
+    private final AuthorService authorService;
 
-    @Autowired
-    AuthorService authorService;
+    public AuthorController(@Autowired AuthorService authorService){
+        this.authorService = authorService;
+    }
 
     @PostMapping("/author")
+    @RolesAllowed({"admin"})
     public Author create(@RequestBody Author author){
         return authorService.create(author);
     }
