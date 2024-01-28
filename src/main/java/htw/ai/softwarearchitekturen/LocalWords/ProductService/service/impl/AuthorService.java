@@ -63,7 +63,6 @@ public class AuthorService implements IAuthorService {
         update(author);
         return true;
     }
-
     @Override
     public Set<Product> getProducts(UUID authorId) {
         return getAuthor(authorId).getProducts();
