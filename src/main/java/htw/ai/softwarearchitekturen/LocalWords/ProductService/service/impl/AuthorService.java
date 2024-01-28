@@ -3,6 +3,7 @@ package htw.ai.softwarearchitekturen.LocalWords.ProductService.service.impl;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.model.Author;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.model.Product;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.port.exception.AuthorNotFoundException;
+import htw.ai.softwarearchitekturen.LocalWords.ProductService.port.exception.ProductAlreadyExistsException;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.service.interfaces.IAuthorRepository;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.service.interfaces.IAuthorService;
 import org.springframework.stereotype.Service;
@@ -50,16 +51,21 @@ public class AuthorService implements IAuthorService {
         authorRepository.deleteById(id);
     }
 
-    public Iterable<UUID> addProduct(UUID authorId, UUID productId){
-        Author author = getAuthor(authorId);
-        Set<UUID> products = author.getProducts();
-        products.add(productId);
-        author.setProducts(products);
-        return update(author).getProducts();
-    }
-=======
     @Override
-    public Set<Product> getProducts(UUID authorId) throws AuthorNotFoundException{
+    public Boolean addProduct(UUID authorId, Product product) throws AuthorNotFoundException{
+        Author author = getAuthor(authorId);
+        Set<Product> products = author.getProducts();
+        if (products.contains(product)) {
+            throw new ProductAlreadyExistsException("Product already exists");
+        }
+        products.add(product);
+        author.setProducts(products);
+        update(author);
+        return true;
+    }
+
+    @Override
+    public Set<Product> getProducts(UUID authorId) {
         return getAuthor(authorId).getProducts();
     }
 
@@ -83,7 +89,6 @@ public class AuthorService implements IAuthorService {
     }
 
 
->>>>>>> Stashed changes
 
 
 }

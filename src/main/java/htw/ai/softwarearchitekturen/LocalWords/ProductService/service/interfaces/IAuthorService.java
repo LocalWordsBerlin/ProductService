@@ -3,6 +3,7 @@ package htw.ai.softwarearchitekturen.LocalWords.ProductService.service.interface
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.model.Author;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.model.Product;
 
+import java.util.Set;
 import java.util.UUID;
 
 public interface IAuthorService {
@@ -16,9 +17,9 @@ public interface IAuthorService {
 
     void delete(UUID id);
 
-    Iterable<UUID> addProduct(UUID authorId, UUID productId);
+    Boolean addProduct(UUID authorId, Product product);
 
-    Iterable<Product> getProducts(UUID authorId);
+    Set<Product> getProducts(UUID authorId);
 
     Author getAuthorByName(String name);
 
