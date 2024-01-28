@@ -6,6 +6,7 @@ import htw.ai.softwarearchitekturen.LocalWords.ProductService.service.impl.Autho
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -25,24 +26,24 @@ public class AuthorController {
         return authorService.create(author);
     }
 
-    @PermitAll
+    @Secured("permitAll")
     @GetMapping("/authors")
     public Iterable<Author> getAuthors(){
         return authorService.getAllAuthors();
     }
 
-    @PermitAll
+    @Secured("permitAll")
     @GetMapping("/author/{id}")
     public Author getAuthor(@PathVariable UUID id){
         return authorService.getAuthor(id);
     }
 
-    @PermitAll
+    @Secured("permitAll")
     @GetMapping("/author/name/{name}")
     public Author getAuthorByName(@PathVariable String name){
         return authorService.getAuthorByName(name);
     }
-    @PermitAll
+    @Secured("permitAll")
     @GetMapping("/author/{id}/products")
     public Iterable<Product> getProducts(@PathVariable UUID id){
         return authorService.getAuthor(id).getProducts();

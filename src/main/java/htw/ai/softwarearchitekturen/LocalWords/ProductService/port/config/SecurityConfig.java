@@ -13,7 +13,10 @@ import org.springframework.security.web.authentication.session.RegisterSessionAu
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 @EnableWebSecurity
 @Configuration
-@EnableMethodSecurity(jsr250Enabled = true)
+@EnableMethodSecurity(
+        jsr250Enabled = true,
+        securedEnabled = true,
+        prePostEnabled = true)
 public class SecurityConfig {
 
     @Bean
