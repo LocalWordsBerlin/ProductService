@@ -6,14 +6,13 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ProductStockConsumer {
-/**
+public class UserConsumer {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(ProductStockConsumer.class);
 
-    @RabbitListener(queues = "stockQueue")
-    public void consume(String message) {
+    @RabbitListener(queues = "updateQueue")
+    public void consume(String message) throws InterruptedException{
         LOGGER.info(String.format("Received message -> %s ", message));
-        //add Logic to interpret message and add or remove STOCK of Product
+        System.out.println("UserConsumer: " + message);
     }
-**/
 }

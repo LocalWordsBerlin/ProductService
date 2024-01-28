@@ -3,29 +3,29 @@ package htw.ai.softwarearchitekturen.LocalWords.ProductService.port.producer.adm
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.port.producer.cart.AddToCartProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.core.FanoutExchange;
+import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-//@PropertySource("src/main/resources/application.properties")
 @Service
 public class UpdateProductProducer implements IProductProducer {
-    @Value("${rabbitmq.exchange.name}")
+    private final RabbitTemplate template;
+
+    @Value("${spring.rabbitmq.exchange}")
     private String exchange;
 
-    @Value("${rabbitmq.routing.updateKey}")
-    private String routingKey;
+    @Value("${spring.rabbitmq.routingkey}")
+    private String routingkey;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AddToCartProducer.class);
-
-    private final RabbitTemplate rabbitTemplate;
-
-    public UpdateProductProducer(RabbitTemplate rabbitTemplate) {
-        this.rabbitTemplate = rabbitTemplate;
+    @Autowired
+    public UpdateProductProducer(RabbitTemplate template) {
+        this.template = template;
     }
-
     @Override
     public void sendMessage(String message) {
-        rabbitTemplate.convertAndSend(exchange, routingKey, message);
+        template.convertAndSend(exchange,routingkey, message);
     }
 }

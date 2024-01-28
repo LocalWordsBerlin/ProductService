@@ -1,6 +1,7 @@
 package htw.ai.softwarearchitekturen.LocalWords.ProductService.service.impl;
 
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.model.Author;
+import htw.ai.softwarearchitekturen.LocalWords.ProductService.model.Product;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.port.exception.AuthorNotFoundException;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.service.interfaces.IAuthorRepository;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.service.interfaces.IAuthorService;
@@ -49,11 +50,6 @@ public class AuthorService implements IAuthorService {
         authorRepository.deleteById(id);
     }
 
-<<<<<<< Updated upstream
-    public Iterable<UUID> getProducts(UUID authorId){
-        return getAuthor(authorId).getProducts();
-    }
-
     public Iterable<UUID> addProduct(UUID authorId, UUID productId){
         Author author = getAuthor(authorId);
         Set<UUID> products = author.getProducts();
@@ -63,7 +59,7 @@ public class AuthorService implements IAuthorService {
     }
 =======
     @Override
-    public Iterable<Product> getProducts(UUID authorId) throws AuthorNotFoundException{
+    public Set<Product> getProducts(UUID authorId) throws AuthorNotFoundException{
         return getAuthor(authorId).getProducts();
     }
 
@@ -88,4 +84,6 @@ public class AuthorService implements IAuthorService {
 
 
 >>>>>>> Stashed changes
+
+
 }

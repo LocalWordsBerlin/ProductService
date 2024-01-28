@@ -39,9 +39,7 @@ public class Product {
     private String imageLink;
 
     @Column(nullable = false)
-    @ManyToMany(fetch = FetchType.LAZY,
-            cascade= {CascadeType.PERSIST, CascadeType.MERGE,
-                    CascadeType.DETACH, CascadeType.REFRESH})
+    @ManyToMany
     @JoinTable(
             name = "product_author",
             joinColumns = @JoinColumn(name = "product_id"),
