@@ -26,4 +26,12 @@ public interface IProductService {
     Set<Author> getAuthors(UUID id);
 
     Product getProductByIsbn(String isbn);
+
+    Iterable<Product> getProductsByGenre(String genre);
+
+    Iterable<Product> getProductsByTitleOrAuthors(String search, String search2);
+
+    Iterable<Product> getProductsByTitle(String title);
+
+
 }

@@ -94,4 +94,19 @@ public class ProductService implements IProductService {
     public Product getProductByIsbn(String isbn) throws ProductNotFoundException{
         return productRepository.findByIsbn(isbn);
     }
+
+    @Override
+    public Iterable<Product> getProductsByGenre(String genre) {
+        return productRepository.findByGenre(genre);
+    }
+
+    @Override
+    public Iterable<Product> getProductsByTitleOrAuthors(String search, String search2) {
+        return productRepository.findByTitleOrAuthors(search, search2);
+    }
+
+    @Override
+    public Iterable<Product> getProductsByTitle(String title) {
+        return productRepository.findByTitle(title);
+    }
 }

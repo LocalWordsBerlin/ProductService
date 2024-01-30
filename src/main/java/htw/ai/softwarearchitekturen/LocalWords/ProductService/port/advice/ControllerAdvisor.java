@@ -1,9 +1,6 @@
 package htw.ai.softwarearchitekturen.LocalWords.ProductService.port.advice;
 
-import htw.ai.softwarearchitekturen.LocalWords.ProductService.port.exception.AuthorNotFoundException;
-import htw.ai.softwarearchitekturen.LocalWords.ProductService.port.exception.OutOfStockException;
-import htw.ai.softwarearchitekturen.LocalWords.ProductService.port.exception.ProductAlreadyExistsException;
-import htw.ai.softwarearchitekturen.LocalWords.ProductService.port.exception.ProductNotFoundException;
+import htw.ai.softwarearchitekturen.LocalWords.ProductService.port.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -36,6 +33,18 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
     ResponseEntity<Object> handleAuthorNotFoundException(AuthorNotFoundException ex){
         return new ResponseEntity<>(createResponseBody(ex), HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(NotAuthorizedException.class)
+    ResponseEntity<Object> handleNotAuthorizedException(NotAuthorizedException ex){
+        return new ResponseEntity<>(createResponseBody(ex), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(ProductCreationException.class)
+    ResponseEntity<Object> handleProductCreationException(ProductCreationException ex){
+        return new ResponseEntity<>(createResponseBody(ex), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+
 
     public Map<String, Object> createResponseBody(Exception exception){
         Map<String, Object> body = new LinkedHashMap<>();

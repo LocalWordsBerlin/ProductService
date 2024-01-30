@@ -23,6 +23,9 @@ public class Product {
     @Column(nullable = false)
     private String description;
 
+    @Column
+    private String genre;
+
     @Column(nullable = false)
     private String language;
 
