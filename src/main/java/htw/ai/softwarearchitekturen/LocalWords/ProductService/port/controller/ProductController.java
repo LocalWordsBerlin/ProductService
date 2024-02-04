@@ -1,27 +1,20 @@
 package htw.ai.softwarearchitekturen.LocalWords.ProductService.port.controller;
 
-import htw.ai.softwarearchitekturen.LocalWords.ProductService.model.Author;
-import htw.ai.softwarearchitekturen.LocalWords.ProductService.port.config.RabbitMQConfig;
+import htw.ai.softwarearchitekturen.LocalWords.ProductService.model.Product;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.port.exception.OutOfStockException;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.port.exception.ProductAlreadyExistsException;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.port.exception.ProductCreationException;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.port.exception.ProductNotFoundException;
-import htw.ai.softwarearchitekturen.LocalWords.ProductService.port.producer.admin.IProductProducer;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.port.producer.admin.UpdateProductProducer;
-import htw.ai.softwarearchitekturen.LocalWords.ProductService.port.producer.cart.AddToCartProducer;
-import htw.ai.softwarearchitekturen.LocalWords.ProductService.model.Product;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.service.interfaces.IAuthorService;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.service.interfaces.IProductService;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.service.interfaces.ISearchService;
-import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.channels.ScatteringByteChannel;
 import java.util.UUID;
 
 @RestController
@@ -148,15 +141,6 @@ public class ProductController {
         }
     }
 
-    @Secured("permitAll")
-    @GetMapping("/productsByTitleOrAuthors/{search}/{search2}")
-    public @ResponseBody Iterable<Product> getProductsByTitleOrAuthors(@PathVariable String search, @PathVariable String search2) {
-        try{
-            return productService.getProductsByTitleOrAuthors(search, search2);
-        } catch (Exception e) {
-            throw new ProductNotFoundException();
-        }
-    }
 
     @Secured("permitAll")
     @GetMapping("/productsByTitle/{title}")

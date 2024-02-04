@@ -42,6 +42,9 @@ public class Product {
     private String imageLink;
 
     @Column(nullable = false)
+    private double price;
+
+    @Column(nullable = false)
     @ManyToMany
     @JoinTable(
             name = "product_author",
@@ -129,5 +132,22 @@ public class Product {
 
     public void setAuthors(Set<Author> authors) {
         this.authors = authors;
+    }
+
+    public String getGenre() {
+        return genre;
+    }
+
+    public void setGenre(String genre) {
+        this.genre = genre;
+    }
+
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 }

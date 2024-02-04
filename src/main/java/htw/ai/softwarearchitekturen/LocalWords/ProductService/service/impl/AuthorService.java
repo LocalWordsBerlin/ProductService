@@ -32,7 +32,7 @@ public class AuthorService implements IAuthorService {
         if(result.isPresent())
             author = result.get();
         else
-            throw new AuthorNotFoundException(id);
+            return null;
         return author;
     }
 
@@ -42,22 +42,23 @@ public class AuthorService implements IAuthorService {
     }
 
     @Override
-    public Author update(Author author) throws AuthorNotFoundException {
+    public Author update(Author author) {
+        if (!authorRepository.existsById(author.getId())) return null;
         return authorRepository.save(author);
     }
 
     @Override
-    public void delete(UUID id) throws AuthorNotFoundException{
+    public Boolean delete(UUID id) {
+        if (!authorRepository.existsById(id)) return false;
         authorRepository.deleteById(id);
+        return true;
     }
 
     @Override
-    public Boolean addProduct(UUID authorId, Product product) throws AuthorNotFoundException{
+    public Boolean addProduct(UUID authorId, Product product){
         Author author = getAuthor(authorId);
         Set<Product> products = author.getProducts();
-        if (products.contains(product)) {
-            throw new ProductAlreadyExistsException("Product already exists");
-        }
+        if (products.contains(product)) return false;
         products.add(product);
         author.setProducts(products);
         update(author);
@@ -69,21 +70,17 @@ public class AuthorService implements IAuthorService {
     }
 
     @Override
-    public Author getAuthorByName(String name) throws AuthorNotFoundException{
-        Author author = authorRepository.findByFirstNameOrLastName(name, name);
-        if(author == null){
-            throw new AuthorNotFoundException(name);
-        }
-        return author;
+    public Author getAuthorByName(String name) {
+        return authorRepository.findByFirstNameOrLastName(name, name);
     }
 
     @Override
-    public Iterable<Author> getAuthorsByDistrict(String district) throws AuthorNotFoundException{
+    public Iterable<Author> getAuthorsByDistrict(String district) {
         return authorRepository.findByDistrict(district);
     }
 
     @Override
-    public Iterable<Author> getAuthorsByPlz(String plz) throws AuthorNotFoundException{
+    public Iterable<Author> getAuthorsByPlz(String plz) {
         return authorRepository.findByPlz(plz);
     }
 

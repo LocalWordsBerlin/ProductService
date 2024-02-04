@@ -29,9 +29,8 @@ public interface IProductService {
 
     Iterable<Product> getProductsByGenre(String genre);
 
-    Iterable<Product> getProductsByTitleOrAuthors(String search, String search2);
-
     Iterable<Product> getProductsByTitle(String title);
+
 
 
 }

@@ -15,7 +15,7 @@ public interface IAuthorService {
 
     Author update(Author author);
 
-    void delete(UUID id);
+    Boolean delete(UUID id);
 
     Boolean addProduct(UUID authorId, Product product);
 

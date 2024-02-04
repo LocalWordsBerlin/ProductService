@@ -19,11 +19,6 @@ public class SearchService implements ISearchService {
     }
 
     @Override
-    public Iterable<Product> getProductsByAuthor(String authorName) throws AuthorNotFoundException {
-        return authorService.getAuthorByName(authorName).getProducts();
-    }
-
-    @Override
     public Iterable<Product> getProductsByDistrict(String district) {
         return authorService.getAuthorsByDistrict(district).iterator().next().getProducts();
     }
@@ -33,8 +28,7 @@ public class SearchService implements ISearchService {
         return authorService.getAuthorsByPlz(plz).iterator().next().getProducts();
     }
 
-    @Override
-    public Iterable<Product> getProductsByTitle(String title) {
-        return productService.getProductsByTitle(title);
-    }
+
+
+
 }

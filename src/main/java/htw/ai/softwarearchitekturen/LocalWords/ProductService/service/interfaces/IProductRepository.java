@@ -10,7 +10,5 @@ public interface IProductRepository extends CrudRepository<Product, UUID> {
 
     Iterable<Product> findByGenre(String genre);
 
-    Iterable<Product> findByTitleOrAuthors(String search, String search2);
-
     Iterable<Product> findByTitle(String title);
 }

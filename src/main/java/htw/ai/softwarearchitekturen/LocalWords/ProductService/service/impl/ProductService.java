@@ -36,20 +36,20 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public void deleteProduct(UUID id) throws ProductNotFoundException{
+    public void deleteProduct(UUID id) {
         productRepository.deleteById(id);
     }
 
     @Override
-    public Product getProduct(UUID id) throws ProductNotFoundException{
+    public Product getProduct(UUID id) {
         Optional<Product> result = productRepository.findById(id);
-        Product product = null;
+        Product product;
         if(result.isPresent()){
             product = result.get();
             return product;
         }
         else {
-            throw new ProductNotFoundException(id);
+            return null;
         }
     }
 
@@ -72,13 +72,13 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public int getStock(UUID id) throws ProductNotFoundException{
+    public int getStock(UUID id){
         return getProduct(id).getStock();
     }
 
     @Override
-    public void addAuthor(UUID id, Author author) throws ProductNotFoundException {
-        Product product = getProduct(id);
+    public void addAuthor(UUID productId, Author author) {
+        Product product = getProduct(productId);
         Set<Author> authors = product.getAuthors();
         authors.add(author);
         product.setAuthors(authors);
@@ -91,7 +91,7 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public Product getProductByIsbn(String isbn) throws ProductNotFoundException{
+    public Product getProductByIsbn(String isbn) {
         return productRepository.findByIsbn(isbn);
     }
 
@@ -101,12 +101,9 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public Iterable<Product> getProductsByTitleOrAuthors(String search, String search2) {
-        return productRepository.findByTitleOrAuthors(search, search2);
-    }
-
-    @Override
     public Iterable<Product> getProductsByTitle(String title) {
         return productRepository.findByTitle(title);
     }
+
+
 }
