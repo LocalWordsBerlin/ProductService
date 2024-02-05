@@ -9,6 +9,8 @@ public interface IAuthorRepository extends CrudRepository<Author, UUID> {
 
     Author findByFirstNameOrLastName(String firstName, String lastName);
 
+    Author findByFirstNameAndLastName(String firstName, String lastName);
+
     Iterable<Author> findByDistrict(String district);
 
     Iterable<Author> findByPlz(String plz);

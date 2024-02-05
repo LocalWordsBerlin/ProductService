@@ -66,12 +66,18 @@ public class AuthorService implements IAuthorService {
     }
     @Override
     public Set<Product> getProducts(UUID authorId) {
+        if (!authorRepository.existsById(authorId)) throw new AuthorNotFoundException(authorId);
         return getAuthor(authorId).getProducts();
     }
 
     @Override
     public Author getAuthorByName(String name) {
         return authorRepository.findByFirstNameOrLastName(name, name);
+    }
+
+    @Override
+    public Author getAuthorByFirstNameAndLastName(String firstName, String lastName) {
+        return authorRepository.findByFirstNameAndLastName(firstName, lastName);
     }
 
     @Override

@@ -23,6 +23,8 @@ public interface IAuthorService {
 
     Author getAuthorByName(String name);
 
+    Author getAuthorByFirstNameAndLastName(String firstName, String lastName);
+
     Iterable<Author> getAuthorsByDistrict(String district);
 
     Iterable<Author> getAuthorsByPlz(String plz);
