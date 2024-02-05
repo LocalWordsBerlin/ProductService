@@ -1,10 +1,7 @@
 package htw.ai.softwarearchitekturen.LocalWords.ProductService.port.controller;
 
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.model.Product;
-import htw.ai.softwarearchitekturen.LocalWords.ProductService.port.exception.OutOfStockException;
-import htw.ai.softwarearchitekturen.LocalWords.ProductService.port.exception.ProductAlreadyExistsException;
-import htw.ai.softwarearchitekturen.LocalWords.ProductService.port.exception.ProductCreationException;
-import htw.ai.softwarearchitekturen.LocalWords.ProductService.port.exception.ProductNotFoundException;
+import htw.ai.softwarearchitekturen.LocalWords.ProductService.port.exception.*;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.port.producer.admin.UpdateProductProducer;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.service.interfaces.IAuthorService;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.service.interfaces.IProductService;
@@ -49,66 +46,36 @@ public class ProductController {
         try {
             return productService.createProduct(product);
         } catch (Exception e) {
-            throw new ProductCreationException("Product could not be created");
+            throw new CreationException("Product could not be created");
         }
     }
 
     @Secured("permitAll")
     @GetMapping("/product/{id}")
     public Product getProduct(@PathVariable UUID id) {
-        return productService.getProduct(id);
-    }
-
-    @Secured("permitAll")
-    @GetMapping("/productByIsbn/{isbn}")
-    public Product getProductByIsbn(@PathVariable String isbn) {
-        return productService.getProductByIsbn(isbn);
-    }
-
-    @Secured("permitAll")
-    @GetMapping("/productByTitle/{title}")
-    public Iterable<Product> getProductByTitle(@PathVariable String title) {
-        return productService.getProductsByTitle(title);
-    }
-
-    @Secured("permitAll")
-    @GetMapping("/productByAuthor/{authorId}")
-    public Iterable<Product> getProductByAuthor(@PathVariable UUID authorId) {
-        return authorService.getProducts(authorId);
-    }
-
-    @Secured("permitAll")
-    @GetMapping("/productsByDistrict/{district}")
-    public Iterable<Product> getProductByDistrict(@PathVariable String district) {
-        return searchService.getProductsByDistrict(district);
-    }
-
-    @Secured("permitAll")
-    @GetMapping("/productsByPlz/{plz}")
-    public Iterable<Product> getProductByPlz(@PathVariable String plz) {
-        try{
-            return searchService.getProductsByPlz(plz);
+        try {
+            return productService.getProduct(id);
         } catch (Exception e) {
-            throw new ProductNotFoundException();
+            throw new ProductNotFoundException(id);
         }
     }
 
     @RolesAllowed({"admin", "customer"})
     @PostMapping("/addToCart/{productId}")
     public void addToCart(@PathVariable UUID productId) {
-        if (productService.getStock(productId) > 0) {
+        if(productService.getStock(productId) > 0) {
             //addToCartProducer.sendMessage("add to Cart" + productId);
         } else {
             throw new OutOfStockException(productId);
         }
     }
 
-    //return updated Product @ResponseBody String instead of void
     @RolesAllowed({"admin"})
     @PutMapping(path = "/product")
-    public void update(@RequestBody Product product) {
+    public @ResponseBody Product update(@RequestBody Product product) {
         try {
             productService.getProduct(product.getId());
+            return productService.updateProduct(product);
         } catch (Exception e) {
             throw new ProductNotFoundException(product.getId());
         }
@@ -154,7 +121,7 @@ public class ProductController {
 
     @RolesAllowed({"admin"})
     @PostMapping("/stock/{id}/{quantity}")
-    public void addStock(@PathVariable(name = "id") UUID id, @PathVariable(name = "quantity") int quantity) throws ProductNotFoundException {
+    public void addStock(@PathVariable(name = "id") UUID id, @PathVariable(name = "quantity") int quantity) {
         try{
             productService.addStock(id, quantity);
         } catch (Exception e) {
@@ -164,11 +131,61 @@ public class ProductController {
 
     @Secured("permitAll")
     @GetMapping("/stock/{id}")
-    public int getStock(@PathVariable(name = "id") UUID id) throws ProductNotFoundException {
+    public int getStock(@PathVariable(name = "id") UUID id)  {
         try{
             return productService.getStock(id);
         } catch (Exception e) {
             throw new ProductNotFoundException(id);
+        }
+    }
+
+    @Secured("permitAll")
+    @GetMapping("/productByIsbn/{isbn}")
+    public Product getProductByIsbn(@PathVariable String isbn) {
+        try {
+            return productService.getProductByIsbn(isbn);
+        } catch (Exception e) {
+            throw new ProductNotFoundException();
+        }
+    }
+
+    @Secured("permitAll")
+    @GetMapping("/productByTitle/{title}")
+    public Iterable<Product> getProductByTitle(@PathVariable String title) {
+        try {
+            return productService.getProductsByTitle(title);
+        } catch (Exception e) {
+            throw new ProductNotFoundException();
+        }
+    }
+
+    @Secured("permitAll")
+    @GetMapping("/productByAuthor/{authorId}")
+    public Iterable<Product> getProductByAuthor(@PathVariable UUID authorId) {
+        try {
+            return authorService.getProducts(authorId);
+        } catch (Exception e) {
+            throw new AuthorNotFoundException(authorId);
+        }
+    }
+
+    @Secured("permitAll")
+    @GetMapping("/productsByDistrict/{district}")
+    public Iterable<Product> getProductByDistrict(@PathVariable String district) {
+        try {
+            return searchService.getProductsByDistrict(district);
+        } catch (Exception e) {
+            throw new ProductNotFoundException();
+        }
+    }
+
+    @Secured("permitAll")
+    @GetMapping("/productsByPlz/{plz}")
+    public Iterable<Product> getProductByPlz(@PathVariable String plz) {
+        try{
+            return searchService.getProductsByPlz(plz);
+        } catch (Exception e) {
+            throw new ProductNotFoundException();
         }
     }
 }

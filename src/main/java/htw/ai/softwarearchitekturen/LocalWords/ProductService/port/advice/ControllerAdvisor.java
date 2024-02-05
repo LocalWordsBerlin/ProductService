@@ -39,10 +39,11 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(createResponseBody(ex), HttpStatus.UNAUTHORIZED);
     }
 
-    @ExceptionHandler(ProductCreationException.class)
-    ResponseEntity<Object> handleProductCreationException(ProductCreationException ex){
+    @ExceptionHandler(CreationException.class)
+    ResponseEntity<Object> handleProductCreationException(CreationException ex){
         return new ResponseEntity<>(createResponseBody(ex), HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
 
 
 

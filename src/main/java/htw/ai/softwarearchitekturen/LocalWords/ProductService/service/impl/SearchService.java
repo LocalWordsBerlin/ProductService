@@ -7,6 +7,9 @@ import htw.ai.softwarearchitekturen.LocalWords.ProductService.service.interfaces
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.service.interfaces.ISearchService;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class SearchService implements ISearchService {
 
@@ -20,12 +23,20 @@ public class SearchService implements ISearchService {
 
     @Override
     public Iterable<Product> getProductsByDistrict(String district) {
-        return authorService.getAuthorsByDistrict(district).iterator().next().getProducts();
+        List<Product> productsByDistrict = new ArrayList<>();
+        authorService.getAuthorsByDistrict(district).forEach(author ->
+                productsByDistrict.addAll(author.getProducts())
+        );
+        return productsByDistrict;
     }
 
     @Override
     public Iterable<Product> getProductsByPlz(String plz) {
-        return authorService.getAuthorsByPlz(plz).iterator().next().getProducts();
+        List<Product> productsByPLZ = new ArrayList<>();
+        authorService.getAuthorsByPlz(plz).forEach(author ->
+                productsByPLZ.addAll(author.getProducts())
+        );
+        return productsByPLZ;
     }
 
 

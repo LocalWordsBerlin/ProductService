@@ -2,10 +2,13 @@ package htw.ai.softwarearchitekturen.LocalWords.ProductService.service.interface
 
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.model.Author;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.model.Product;
+import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import java.util.Set;
 import java.util.UUID;
 
+@Service
 public interface IProductService {
     Product createProduct (Product product);
 
