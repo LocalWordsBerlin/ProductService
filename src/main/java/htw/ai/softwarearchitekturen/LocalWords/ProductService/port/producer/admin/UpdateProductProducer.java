@@ -19,7 +19,8 @@ public class UpdateProductProducer implements IProductProducer {
     private String exchange;
 
     @Value("${spring.rabbitmq.updateRoutingkey}")
-    private String routingkey;
+    private String updateRoutingkey;
+
 
     @Autowired
     public UpdateProductProducer(RabbitTemplate template) {
@@ -27,6 +28,6 @@ public class UpdateProductProducer implements IProductProducer {
     }
     @Override
     public void sendMessage(ProductDTO dto) {
-        template.convertAndSend(exchange,routingkey, dto);
+        template.convertAndSend(exchange,updateRoutingkey, dto);
     }
 }

@@ -24,14 +24,16 @@ spring:
           issuer-uri: http://localhost:8080/realms/localwords
           jwk-set-uri: http://localhost:8080/realms/localwords/protocol/openid-connect/certs
   rabbitmq:
-    host: localhost
+    host: rabbitmq-container
     port: 5672
     username: guest
     password: guest
     exchange: exchange
-    queue: product
     addToCartRoutingkey: addToCart
     stockRoutingkey: stock
     updateRoutingkey: update
+    updateQueue: updateQueue
+    addToCartQueue: addToCartQueue
+    stockQueue: stockQueue
 
 

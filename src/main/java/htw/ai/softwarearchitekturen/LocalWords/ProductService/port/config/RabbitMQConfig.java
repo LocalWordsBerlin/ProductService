@@ -13,32 +13,55 @@ import org.springframework.context.annotation.Profile;
 
 @Configuration
 public class RabbitMQConfig {
+    @Value("${spring.rabbitmq.host}")
+    private String host;
+
+    @Value("${spring.rabbitmq.username}")
+    private String username;
+
+    @Value("${spring.rabbitmq.password}")
+    private String password;
+
+    @Value("${spring.rabbitmq.exchange}")
+    private String exchange;
+
+    @Value("${spring.rabbitmq.updateRoutingkey}")
+    private String updateRoutingkey;
+
+    @Value("${spring.rabbitmq.addToCartRoutingkey}")
+    private String addTocartRoutingkey;
+
+    @Value("${spring.rabbitmq.stockRoutingkey}")
+    private String stockRoutingkey;
+
+    @Value("${spring.rabbitmq.updateQueue}")
+    private String updateQueue;
+
+    @Value("${spring.rabbitmq.addToCartQueue}")
+    private String addToCartQueue;
+
+    @Value("${spring.rabbitmq.stockQueue}")
+    private String stockQueue;
+
     @Bean
     public TopicExchange exchange() {
-        return new TopicExchange("exchange");
+        return new TopicExchange(exchange);
     }
 
     @Bean
     public Queue stockQueue() {
-        return new Queue("stockQueue");
+        return new Queue(stockQueue);
     }
 
     @Bean
     public Queue updateQueue() {
-        return new Queue("updateQueue");
+        return new Queue(updateQueue);
     }
 
     @Bean
     public Queue addToCartQueue() {
-        return new Queue("addToCartQueue");
+        return new Queue(addToCartQueue);
     }
-
-    private String updateRoutingkey = "updateRoutingkey";
-
-    private String addTocartRoutingkey = "addToCartRoutingkey";
-
-
-    private String stockRoutingkey = "stockRoutingkey";
 
     @Bean
     public Binding updateBinding(TopicExchange exchange, Queue updateQueue) {
@@ -66,9 +89,9 @@ public class RabbitMQConfig {
 
     @Bean
     CachingConnectionFactory connectionFactory() {
-        CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory("rabbitmq-container", 5672);
-        cachingConnectionFactory.setUsername("guest");
-        cachingConnectionFactory.setPassword("guest");
+        CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory(host, 5672);
+        cachingConnectionFactory.setUsername(username);
+        cachingConnectionFactory.setPassword(password);
         return cachingConnectionFactory;
     }
     @Bean

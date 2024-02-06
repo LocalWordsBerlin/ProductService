@@ -79,9 +79,5 @@ public class AuthorController {
         if (updatedAuthor == null) throw new AuthorNotFoundException(author.getId());
         return authorService.update(author);
     }
-
-
-
-
 }
 
