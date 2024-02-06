@@ -2,7 +2,8 @@ package htw.ai.softwarearchitekturen.LocalWords.ProductService.port.controller;
 
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.model.Product;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.port.exception.*;
-import htw.ai.softwarearchitekturen.LocalWords.ProductService.port.producer.admin.UpdateProductProducer;
+import htw.ai.softwarearchitekturen.LocalWords.ProductService.port.producer.cart.IAddToCartProducer;
+import htw.ai.softwarearchitekturen.LocalWords.ProductService.service.impl.DTOMapper;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.service.interfaces.IAuthorService;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.service.interfaces.IProductService;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.service.interfaces.ISearchService;
@@ -22,14 +23,17 @@ public class ProductController {
     private final IAuthorService authorService;
 
     private final ISearchService searchService;
-    private final UpdateProductProducer productProducer;
+    private final IAddToCartProducer addToCartProducer;
+
+    private final DTOMapper dtoMapper;
 
     @Autowired
-    public ProductController(IProductService productService, IAuthorService authorService, UpdateProductProducer productProducer, ISearchService searchService) {
+    public ProductController(IProductService productService, IAuthorService authorService, IAddToCartProducer addToCartProducer, ISearchService searchService, DTOMapper dtoMapper) {
         this.productService = productService;
         this.authorService = authorService;
-        this.productProducer = productProducer;
         this.searchService = searchService;
+        this.addToCartProducer = addToCartProducer;
+        this.dtoMapper = dtoMapper;
     }
 
     /*
@@ -62,11 +66,11 @@ public class ProductController {
 
     @RolesAllowed({"admin", "customer"})
     @PostMapping("/addToCart/{productId}")
-    public void addToCart(@PathVariable UUID productId) {
-        if(productService.getStock(productId) > 0) {
-            //addToCartProducer.sendMessage("add to Cart" + productId);
+    public void addToCart(@PathVariable UUID productId, @RequestParam int quantity) {
+        if(productService.getStock(productId) >= quantity) {
+            addToCartProducer.send(dtoMapper.mapToCartDTO(productId, quantity));
         } else {
-            throw new OutOfStockException(productId);
+            throw new OutOfStockException(quantity);
         }
     }
 
@@ -120,12 +124,12 @@ public class ProductController {
     }
 
     @RolesAllowed({"admin"})
-    @PostMapping("/stock/{id}/{quantity}")
-    public void addStock(@PathVariable(name = "id") UUID id, @PathVariable(name = "quantity") int quantity) {
+    @PostMapping("/stock/{isbn}/{quantity}")
+    public void addStock(@PathVariable(name = "isbn") String isbn, @PathVariable(name = "quantity") int quantity) {
         try{
-            productService.addStock(id, quantity);
+            productService.addStock(isbn, quantity);
         } catch (Exception e) {
-            throw new ProductNotFoundException(id);
+            throw new ProductNotFoundException();
         }
     }
 

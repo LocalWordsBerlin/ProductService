@@ -20,7 +20,7 @@ public interface IProductService {
 
     Iterable<Product> getAllProducts();
 
-    void addStock(UUID id, int quantity);
+    void addStock(String isbn, int quantity);
 
     int getStock(UUID id);
 

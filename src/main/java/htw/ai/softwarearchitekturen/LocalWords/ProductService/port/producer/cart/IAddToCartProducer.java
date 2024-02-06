@@ -1,2 +1,7 @@
-package htw.ai.softwarearchitekturen.LocalWords.ProductService.port.producer.cart;public interface IAddToCartProducer {
+package htw.ai.softwarearchitekturen.LocalWords.ProductService.port.producer.cart;
+
+import htw.ai.softwarearchitekturen.LocalWords.ProductService.port.dto.AddToCartDTO;
+
+public interface IAddToCartProducer {
+    void send(AddToCartDTO dto);
 }

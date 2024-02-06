@@ -10,10 +10,10 @@ public class ProductStockConsumer {
 /**
     private static final Logger LOGGER = LoggerFactory.getLogger(ProductStockConsumer.class);
 
-    @RabbitListener(queues = "stockQueue")
-    public void consume(String message) {
+    @RabbitListener(queues = "warehouseQueue")
+    public void consume(WarehouseDTO dto) {
         LOGGER.info(String.format("Received message -> %s ", message));
-        //add Logic to interpret message and add or remove STOCK of Product
+        productService.addStock(dto.getIsbn(),dto.getQuantity());
     }
 **/
 }

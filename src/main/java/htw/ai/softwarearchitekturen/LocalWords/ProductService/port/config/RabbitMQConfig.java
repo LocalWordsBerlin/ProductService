@@ -14,8 +14,13 @@ import org.springframework.context.annotation.Profile;
 @Configuration
 public class RabbitMQConfig {
     @Bean
-    public FanoutExchange exchange() {
-        return new FanoutExchange("exchange");
+    public TopicExchange exchange() {
+        return new TopicExchange("exchange");
+    }
+
+    @Bean
+    public Queue stockQueue() {
+        return new Queue("stockQueue");
     }
 
     @Bean
@@ -24,27 +29,32 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public Queue userQueue() {
-        return new Queue("userQueue");
-    }
-
-    @Bean
     public Queue addToCartQueue() {
         return new Queue("addToCartQueue");
     }
 
     @Bean
-    public Binding updateBinding(FanoutExchange exchange, Queue updateQueue) {
+    public Binding updateBinding(TopicExchange exchange, Queue updateQueue) {
         return BindingBuilder
                 .bind(updateQueue)
-                .to(exchange);
+                .to(exchange)
+                .with("${spring.rabbitmq.updateRoutingkey}");
     }
 
     @Bean
-    public Binding cartBinding(FanoutExchange exchange, Queue addToCartQueue) {
+    public Binding cartBinding(TopicExchange exchange, Queue addToCartQueue) {
         return BindingBuilder
                 .bind(addToCartQueue)
-                .to(exchange);
+                .to(exchange)
+                .with("${spring.rabbitmq.addTocartRoutingkey}");
+    }
+
+    @Bean
+    public Binding stockBinding(TopicExchange exchange, Queue stockQueue) {
+        return BindingBuilder
+                .bind(stockQueue)
+                .to(exchange)
+                .with("${spring.rabbitmq.stockRoutingkey}");
     }
 
     @Bean

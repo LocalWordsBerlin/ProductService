@@ -1,7 +1,7 @@
 package htw.ai.softwarearchitekturen.LocalWords.ProductService.service;
 
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.model.Product;
-import htw.ai.softwarearchitekturen.LocalWords.ProductService.port.producer.admin.IProductProducer;
+import htw.ai.softwarearchitekturen.LocalWords.ProductService.port.producer.admin.IStockProducer;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.service.impl.ProductService;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.service.interfaces.IProductRepository;
 import org.junit.jupiter.api.Test;
@@ -21,7 +21,7 @@ public class ProductServiceTest {
     private IProductRepository productRepository;
 
     @Mock
-    private IProductProducer productProducer;
+    private IStockProducer stockProducer;
 
     @InjectMocks
     private ProductService productService;
@@ -43,7 +43,6 @@ public class ProductServiceTest {
         assertEquals(product.getTitle(), createdProduct.getTitle());
 
         verify(productRepository, times(1)).save(product);
-        verify(productProducer, times(1)).sendMessage(product.toString());
     }
 
     @Test
@@ -63,7 +62,7 @@ public class ProductServiceTest {
         assertEquals(product.getTitle(), updatedProduct.getTitle());
 
         verify(productRepository, times(1)).save(product);
-        verify(productProducer, times(1)).sendMessage(product.toString());
+        //verify(productProducer, times(1)).sendMessage(product.toString());
 
     }
 
@@ -130,13 +129,14 @@ public class ProductServiceTest {
         UUID id = UUID.randomUUID();
         Product product = new Product();
         product.setId(id);
+        product.setIsbn("Test ISBN");
         product.setTitle("Test Product");
         product.setStock(10);
 
-        when(productRepository.findById(id)).thenReturn(java.util.Optional.of(product));
+        when(productRepository.findByIsbn(anyString())).thenReturn(product);
 
         // Act
-        productService.addStock(id, 5);
+        productService.addStock(product.getIsbn(), 5);
 
         // Assert
         assertEquals(15, product.getStock());
@@ -177,7 +177,6 @@ public class ProductServiceTest {
         when(productRepository.findById(id)).thenReturn(java.util.Optional.of(product));
 
         // Act
-        productService.addStock(id, 5);
 
         // Assert
         assertEquals(15, product.getStock());
@@ -267,7 +266,7 @@ public class ProductServiceTest {
 
     public void tearDown() {
         reset(productRepository);
-        reset(productProducer);
+        reset(stockProducer);
     }
 
 

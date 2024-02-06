@@ -1,5 +1,6 @@
 package htw.ai.softwarearchitekturen.LocalWords.ProductService.port.producer.admin;
 
+import htw.ai.softwarearchitekturen.LocalWords.ProductService.port.dto.ProductDTO;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.port.producer.cart.AddToCartProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +18,7 @@ public class UpdateProductProducer implements IProductProducer {
     @Value("${spring.rabbitmq.exchange}")
     private String exchange;
 
-    @Value("${spring.rabbitmq.routingkey}")
+    @Value("${spring.rabbitmq.updateRoutingkey}")
     private String routingkey;
 
     @Autowired
@@ -25,7 +26,7 @@ public class UpdateProductProducer implements IProductProducer {
         this.template = template;
     }
     @Override
-    public void sendMessage(String message) {
-        template.convertAndSend(exchange,routingkey, message);
+    public void sendMessage(ProductDTO dto) {
+        template.convertAndSend(exchange,routingkey, dto);
     }
 }

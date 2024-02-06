@@ -30,6 +30,8 @@ spring:
     password: guest
     exchange: exchange
     queue: product
-    routing-key: routingKey
+    addToCartRoutingkey: addToCart
+    stockRoutingkey: stock
+    updateRoutingkey: update
 
 

@@ -1,9 +1,11 @@
 package htw.ai.softwarearchitekturen.LocalWords.ProductService.service.impl;
 
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.model.Author;
+import htw.ai.softwarearchitekturen.LocalWords.ProductService.port.dto.ProductDTO;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.port.exception.ProductNotFoundException;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.port.producer.admin.IProductProducer;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.model.Product;
+import htw.ai.softwarearchitekturen.LocalWords.ProductService.port.producer.admin.IStockProducer;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.service.interfaces.IProductRepository;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.service.interfaces.IProductService;
 import org.springframework.stereotype.Service;
@@ -15,23 +17,23 @@ import java.util.UUID;
 @Service
 public class ProductService implements IProductService {
     private final IProductRepository productRepository;
-    private final IProductProducer productProducer;
+    private final IStockProducer stockProducer;
 
-    ProductService(IProductRepository productRepository, IProductProducer productProducer){
+    private final DTOMapper dtoMapper;
+
+    ProductService(IProductRepository productRepository, IStockProducer stockProducer, DTOMapper dtoMapper){
         this.productRepository = productRepository;
-        this.productProducer = productProducer;
+        this.stockProducer = stockProducer;
+        this.dtoMapper = dtoMapper;
     }
     @Override
     public Product createProduct(Product product) {
-        Product savedProduct = productRepository.save(product);
-        productProducer.sendMessage(product.toString());
-        return savedProduct;
+        return productRepository.save(product);
     }
 
     @Override
     public Product updateProduct(Product product) {
         Product savedProduct = productRepository.save(product);
-        productProducer.sendMessage(product.toString());
         return savedProduct;
     }
 
@@ -59,15 +61,15 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public void addStock(UUID id, int quantity) throws ProductNotFoundException{
-        Optional<Product> result = productRepository.findById(id);
-        Product product = null;
-        if(result.isPresent()){
-            product = result.get();
-            product.setStock(product.getStock()+quantity);
+    public void addStock(String isbn, int quantity) throws ProductNotFoundException{
+        Product product = productRepository.findByIsbn(isbn);
+        if(product != null){
+            int newStock = product.getStock() + quantity;
+            product.setStock(newStock);
+            stockProducer.send(dtoMapper.mapToStockDTO(product));
         }
         else {
-            throw new ProductNotFoundException(id);
+            throw new ProductNotFoundException();
         }
     }
 

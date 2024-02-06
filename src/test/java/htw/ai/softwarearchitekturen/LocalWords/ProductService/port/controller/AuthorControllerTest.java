@@ -110,8 +110,6 @@ public class AuthorControllerTest {
         newAuthor.setPlz("12345");
         newAuthor.setProducts(Collections.emptySet());
 
-        Optional<Author> author = Optional.empty();
-
         when(authorService.getAuthor(newAuthor.getId())).thenReturn(newAuthor);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/author/" + newAuthor.getId()))

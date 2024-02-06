@@ -1,5 +1,6 @@
 package htw.ai.softwarearchitekturen.LocalWords.ProductService.port.producer.cart;
 
+import htw.ai.softwarearchitekturen.LocalWords.ProductService.port.dto.AddToCartDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.FanoutExchange;
@@ -9,6 +10,22 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AddToCartProducer{
+public class AddToCartProducer implements IAddToCartProducer{
+    private final RabbitTemplate template;
 
+    @Value("${spring.rabbitmq.exchange}")
+    private String exchange;
+
+    @Value("${spring.rabbitmq.addTocartRoutingkey}")
+    private String routingkey;
+
+    @Autowired
+    public AddToCartProducer(RabbitTemplate template) {
+        this.template = template;
+    }
+
+    @Override
+    public void send(AddToCartDTO dto) {
+        template.convertAndSend(exchange,routingkey, dto);
+    }
 }

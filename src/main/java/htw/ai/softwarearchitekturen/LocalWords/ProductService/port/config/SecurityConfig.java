@@ -9,21 +9,17 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
-import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
+
 @EnableWebSecurity
 @Configuration
 @EnableMethodSecurity(
         jsr250Enabled = true,
-        securedEnabled = true,
-        prePostEnabled = true)
+        securedEnabled = true)
 public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain clientFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/v1/admin").hasRole("admin")
-                .requestMatchers("/v1/public").permitAll()
                 .anyRequest()
                 .authenticated());
         http.oauth2ResourceServer(oauth2 -> oauth2
