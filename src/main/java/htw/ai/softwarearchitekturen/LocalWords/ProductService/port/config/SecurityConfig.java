@@ -2,6 +2,7 @@ package htw.ai.softwarearchitekturen.LocalWords.ProductService.port.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -12,14 +13,13 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @EnableWebSecurity
 @Configuration
-@EnableMethodSecurity(
-        jsr250Enabled = true,
-        securedEnabled = true)
+@EnableMethodSecurity(jsr250Enabled = true)
 public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain clientFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth -> auth
+                .requestMatchers("api/v1/public/**").permitAll()
                 .anyRequest()
                 .authenticated());
         http.oauth2ResourceServer(oauth2 -> oauth2

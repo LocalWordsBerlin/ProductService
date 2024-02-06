@@ -35,14 +35,14 @@ public class AuthorController {
         }
     }
 
-    @Secured("permitAll")
-    @GetMapping("/authors")
+    @PermitAll
+    @GetMapping("/public/authors")
     public Iterable<Author> getAuthors(){
         return authorService.getAllAuthors();
     }
 
-    @Secured("permitAll")
-    @GetMapping("/author/{id}")
+    @PermitAll
+    @GetMapping("/public/author/{id}")
     public Author getAuthor(@PathVariable UUID id){
         try {
             Author author = authorService.getAuthor(id);
@@ -53,15 +53,15 @@ public class AuthorController {
         }
     }
 
-    @Secured("permitAll")
-    @GetMapping("/author/name/{name}")
+    @PermitAll
+    @GetMapping("/public/author/name/{name}")
     public Author getAuthorByName(@PathVariable String name){
         Author author = authorService.getAuthorByName(name);
         if (author == null) throw new AuthorNotFoundException(name);
         return author;
     }
-    @Secured("permitAll")
-    @GetMapping("/author/{id}/products")
+    @PermitAll
+    @GetMapping("/public/author/{id}/products")
     public Iterable<Product> getProducts(@PathVariable UUID id){
         return authorService.getProducts(id);
     }

@@ -33,12 +33,19 @@ public class RabbitMQConfig {
         return new Queue("addToCartQueue");
     }
 
+    private String updateRoutingkey = "updateRoutingkey";
+
+    private String addTocartRoutingkey = "addTocartRoutingkey";
+
+
+    private String stockRoutingkey = "stockRoutingkey";
+
     @Bean
     public Binding updateBinding(TopicExchange exchange, Queue updateQueue) {
         return BindingBuilder
                 .bind(updateQueue)
                 .to(exchange)
-                .with("${spring.rabbitmq.updateRoutingkey}");
+                .with(updateRoutingkey);
     }
 
     @Bean
@@ -46,7 +53,7 @@ public class RabbitMQConfig {
         return BindingBuilder
                 .bind(addToCartQueue)
                 .to(exchange)
-                .with("${spring.rabbitmq.addTocartRoutingkey}");
+                .with(addTocartRoutingkey);
     }
 
     @Bean
@@ -54,7 +61,7 @@ public class RabbitMQConfig {
         return BindingBuilder
                 .bind(stockQueue)
                 .to(exchange)
-                .with("${spring.rabbitmq.stockRoutingkey}");
+                .with(stockRoutingkey);
     }
 
     @Bean

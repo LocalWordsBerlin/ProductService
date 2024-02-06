@@ -4,22 +4,15 @@ import htw.ai.softwarearchitekturen.LocalWords.ProductService.model.Product;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.port.dto.AddToCartDTO;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.port.dto.ProductDTO;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.port.dto.StockDTO;
-import htw.ai.softwarearchitekturen.LocalWords.ProductService.service.interfaces.IAuthorService;
-import htw.ai.softwarearchitekturen.LocalWords.ProductService.service.interfaces.IProductService;
 import org.springframework.stereotype.Service;
-
-import java.util.UUID;
 
 @Service
 public class DTOMapper {
-    private final IProductService productService;
 
-    public DTOMapper(IProductService productService, IAuthorService authorService) {
-        this.productService = productService;
+    public DTOMapper() {
     }
 
-    public ProductDTO mapToDTO(String isbn) {
-        Product product = productService.getProductByIsbn(isbn);
+    public ProductDTO mapToProductDTO(Product product) {
         ProductDTO dto = new ProductDTO();
         dto.setId(product.getId());
         dto.setTitle(product.getTitle());
@@ -28,8 +21,7 @@ public class DTOMapper {
         return dto;
     }
 
-    public AddToCartDTO mapToCartDTO(UUID id, int quantity) {
-        Product product = productService.getProduct(id);
+    public AddToCartDTO mapToCartDTO(Product product, int quantity) {
         AddToCartDTO dto = new AddToCartDTO();
         dto.setId(product.getId());
         dto.setStock(product.getStock());

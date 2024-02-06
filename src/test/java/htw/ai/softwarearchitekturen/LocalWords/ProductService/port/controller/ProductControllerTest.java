@@ -102,15 +102,14 @@ public class ProductControllerTest {
     public void testAddToCart() {
         // Arrange
         UUID productId = UUID.randomUUID();
-        int quantity = 5;
-
-        when(productService.getStock(productId)).thenReturn(quantity + 1);
-        when(dtoMapper.mapToCartDTO(productId, quantity)).thenReturn(new AddToCartDTO());
+        Product product = new Product();
+        product.setId(productId);
+        product.setStock(10);
+        when(productService.getProduct(productId)).thenReturn(product);
+        when(dtoMapper.mapToCartDTO(product, 10)).thenReturn(new AddToCartDTO());
         // Act
-        productController.addToCart(productId, quantity);
-
+        productController.addToCart(productId, 10);
         // Assert
-        verify(productService, times(1)).getStock(productId);
         verify(addToCartProducer, times(1)).send(any(AddToCartDTO.class));
     }
 

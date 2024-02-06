@@ -16,7 +16,7 @@ public class AddToCartProducer implements IAddToCartProducer{
     @Value("${spring.rabbitmq.exchange}")
     private String exchange;
 
-    @Value("${spring.rabbitmq.addTocartRoutingkey}")
+    @Value("${spring.rabbitmq.addToCartRoutingkey}")
     private String routingkey;
 
     @Autowired

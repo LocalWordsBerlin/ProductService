@@ -7,16 +7,16 @@ import htw.ai.softwarearchitekturen.LocalWords.ProductService.service.impl.DTOMa
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.service.interfaces.IAuthorService;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.service.interfaces.IProductService;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.service.interfaces.ISearchService;
+import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
 @RestController
-@RequestMapping("api/v1")
+@RequestMapping("/api/v1")
 public class ProductController {
 
     private final IProductService productService;
@@ -54,8 +54,8 @@ public class ProductController {
         }
     }
 
-    @Secured("permitAll")
-    @GetMapping("/product/{id}")
+    @PermitAll
+    @GetMapping("/public/product/{id}")
     public Product getProduct(@PathVariable UUID id) {
         try {
             return productService.getProduct(id);
@@ -67,8 +67,9 @@ public class ProductController {
     @RolesAllowed({"admin", "customer"})
     @PostMapping("/addToCart/{productId}")
     public void addToCart(@PathVariable UUID productId, @RequestParam int quantity) {
-        if(productService.getStock(productId) >= quantity) {
-            addToCartProducer.send(dtoMapper.mapToCartDTO(productId, quantity));
+        Product product = productService.getProduct(productId);
+        if(product.getStock() >= quantity) {
+            addToCartProducer.send(dtoMapper.mapToCartDTO(product, quantity));
         } else {
             throw new OutOfStockException(quantity);
         }
@@ -96,14 +97,14 @@ public class ProductController {
         return "Successfully deleted Product " + id;
     }
 
-    @Secured("permitAll")
-    @GetMapping("/products")
+    @PermitAll
+    @GetMapping("/public/products")
     public @ResponseBody Iterable<Product> getProducts() {
         return productService.getAllProducts();
     }
 
-    @Secured("permitAll")
-    @GetMapping("/productsByGenre/{genre}")
+    @PermitAll
+    @GetMapping("/public/productsByGenre/{genre}")
     public @ResponseBody Iterable<Product> getProductsByGenre(@PathVariable String genre) {
         try{
             return productService.getProductsByGenre(genre);
@@ -113,8 +114,8 @@ public class ProductController {
     }
 
 
-    @Secured("permitAll")
-    @GetMapping("/productsByTitle/{title}")
+    @PermitAll
+    @GetMapping("/public/productsByTitle/{title}")
     public @ResponseBody Iterable<Product> getProductsByTitle(@PathVariable String title) {
         try{
             return productService.getProductsByTitle(title);
@@ -133,8 +134,8 @@ public class ProductController {
         }
     }
 
-    @Secured("permitAll")
-    @GetMapping("/stock/{id}")
+    @PermitAll
+    @GetMapping("/public/stock/{id}")
     public int getStock(@PathVariable(name = "id") UUID id)  {
         try{
             return productService.getStock(id);
@@ -143,8 +144,8 @@ public class ProductController {
         }
     }
 
-    @Secured("permitAll")
-    @GetMapping("/productByIsbn/{isbn}")
+    @PermitAll
+    @GetMapping("/public/productByIsbn/{isbn}")
     public Product getProductByIsbn(@PathVariable String isbn) {
         try {
             return productService.getProductByIsbn(isbn);
@@ -153,8 +154,8 @@ public class ProductController {
         }
     }
 
-    @Secured("permitAll")
-    @GetMapping("/productByTitle/{title}")
+    @PermitAll
+    @GetMapping("/public/productByTitle/{title}")
     public Iterable<Product> getProductByTitle(@PathVariable String title) {
         try {
             return productService.getProductsByTitle(title);
@@ -163,8 +164,8 @@ public class ProductController {
         }
     }
 
-    @Secured("permitAll")
-    @GetMapping("/productByAuthor/{authorId}")
+    @PermitAll
+    @GetMapping("/public/productByAuthor/{authorId}")
     public Iterable<Product> getProductByAuthor(@PathVariable UUID authorId) {
         try {
             return authorService.getProducts(authorId);
@@ -173,8 +174,8 @@ public class ProductController {
         }
     }
 
-    @Secured("permitAll")
-    @GetMapping("/productsByDistrict/{district}")
+    @PermitAll
+    @GetMapping("/public/productsByDistrict/{district}")
     public Iterable<Product> getProductByDistrict(@PathVariable String district) {
         try {
             return searchService.getProductsByDistrict(district);
@@ -183,8 +184,8 @@ public class ProductController {
         }
     }
 
-    @Secured("permitAll")
-    @GetMapping("/productsByPlz/{plz}")
+    @PermitAll
+    @GetMapping("/public/productsByPlz/{plz}")
     public Iterable<Product> getProductByPlz(@PathVariable String plz) {
         try{
             return searchService.getProductsByPlz(plz);
