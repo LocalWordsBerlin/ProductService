@@ -35,7 +35,7 @@ public class RabbitMQConfig {
 
     private String updateRoutingkey = "updateRoutingkey";
 
-    private String addTocartRoutingkey = "addTocartRoutingkey";
+    private String addTocartRoutingkey = "addToCartRoutingkey";
 
 
     private String stockRoutingkey = "stockRoutingkey";
