@@ -29,7 +29,7 @@ public class Product {
     @Column(nullable = false)
     private String language;
 
-    @Column(nullable = false)
+    @Column()
     private int pages;
 
     @Column(nullable = false)
