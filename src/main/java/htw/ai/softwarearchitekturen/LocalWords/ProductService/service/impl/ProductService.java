@@ -33,8 +33,7 @@ public class ProductService implements IProductService {
 
     @Override
     public Product updateProduct(Product product) {
-        Product savedProduct = productRepository.save(product);
-        return savedProduct;
+        return productRepository.save(product);
     }
 
     @Override

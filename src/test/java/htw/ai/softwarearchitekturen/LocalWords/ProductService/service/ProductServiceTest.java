@@ -1,7 +1,11 @@
 package htw.ai.softwarearchitekturen.LocalWords.ProductService.service;
 
+import htw.ai.softwarearchitekturen.LocalWords.ProductService.model.Author;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.model.Product;
+import htw.ai.softwarearchitekturen.LocalWords.ProductService.port.dto.StockDTO;
+import htw.ai.softwarearchitekturen.LocalWords.ProductService.port.exception.ProductNotFoundException;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.port.producer.admin.IStockProducer;
+import htw.ai.softwarearchitekturen.LocalWords.ProductService.service.impl.DTOMapper;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.service.impl.ProductService;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.service.interfaces.IProductRepository;
 import org.junit.jupiter.api.Test;
@@ -13,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -22,6 +27,9 @@ public class ProductServiceTest {
 
     @Mock
     private IStockProducer stockProducer;
+
+    @Mock
+    private DTOMapper dtoMapper;
 
     @InjectMocks
     private ProductService productService;
@@ -62,15 +70,12 @@ public class ProductServiceTest {
         assertEquals(product.getTitle(), updatedProduct.getTitle());
 
         verify(productRepository, times(1)).save(product);
-        //verify(productProducer, times(1)).sendMessage(product.toString());
-
     }
 
     @Test
     public void testDeleteProduct() {
         // Arrange
         UUID id = UUID.randomUUID();
-
         // Act
         productService.deleteProduct(id);
 
@@ -130,7 +135,6 @@ public class ProductServiceTest {
         Product product = new Product();
         product.setId(id);
         product.setIsbn("Test ISBN");
-        product.setTitle("Test Product");
         product.setStock(10);
 
         when(productRepository.findByIsbn(anyString())).thenReturn(product);
@@ -141,7 +145,18 @@ public class ProductServiceTest {
         // Assert
         assertEquals(15, product.getStock());
 
-        verify(productRepository, times(1)).findById(id);
+        verify(productRepository, times(1)).findByIsbn(product.getIsbn());
+        verify(stockProducer, times(1)).send(any());
+    }
+
+    @Test
+    public void testAddStockProductNotFound() {
+        // Arrange
+        when(productRepository.findByIsbn(anyString())).thenReturn(null);
+        // Assert
+        assertThrows(ProductNotFoundException.class, () -> productService.addStock("isbn", 5));
+        verify(productRepository, times(1)).findByIsbn(anyString());
+        verify(stockProducer, never()).send(any(StockDTO.class));
     }
 
     @Test
@@ -160,26 +175,6 @@ public class ProductServiceTest {
 
         // Assert
         assertEquals(10, stock);
-
-        verify(productRepository, times(1)).findById(id);
-    }
-
-
-    @Test
-    public void testAddAuthor(){
-        // Arrange
-        UUID id = UUID.randomUUID();
-        Product product = new Product();
-        product.setId(id);
-        product.setTitle("Test Product");
-        product.setStock(10);
-
-        when(productRepository.findById(id)).thenReturn(java.util.Optional.of(product));
-
-        // Act
-
-        // Assert
-        assertEquals(15, product.getStock());
 
         verify(productRepository, times(1)).findById(id);
     }

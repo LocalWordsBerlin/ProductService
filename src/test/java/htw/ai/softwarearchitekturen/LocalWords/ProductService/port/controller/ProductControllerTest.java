@@ -2,6 +2,10 @@ package htw.ai.softwarearchitekturen.LocalWords.ProductService.port.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.model.Product;
+import htw.ai.softwarearchitekturen.LocalWords.ProductService.port.dto.AddToCartDTO;
+import htw.ai.softwarearchitekturen.LocalWords.ProductService.port.exception.OutOfStockException;
+import htw.ai.softwarearchitekturen.LocalWords.ProductService.port.producer.cart.IAddToCartProducer;
+import htw.ai.softwarearchitekturen.LocalWords.ProductService.service.impl.DTOMapper;
 import htw.ai.softwarearchitekturen.LocalWords.ProductService.service.interfaces.IProductService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,7 +21,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.util.AssertionErrors.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -34,7 +40,15 @@ public class ProductControllerTest {
 
     private MockMvc mockMvc;
 
+    @Mock
     private ObjectMapper objectMapper;
+
+    @Mock
+    private IAddToCartProducer addToCartProducer;
+
+    @Mock
+    private DTOMapper dtoMapper;
+
 
     @BeforeEach
     public void setup() {
@@ -74,7 +88,7 @@ public class ProductControllerTest {
 
         when(productService.getProduct(any(UUID.class))).thenReturn(newProduct);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("api/v1/product/" + newProduct.getId())
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/product/" + newProduct.getId())
                         .contentType("application/json"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(newProduct.getId().toString()))
@@ -84,16 +98,34 @@ public class ProductControllerTest {
         verify(productService, times(1)).getProduct(any(UUID.class));
     }
 
-   @Test
-    public void testAddToCart() throws Exception {
+    @Test
+    public void testAddToCart() {
+        // Arrange
         UUID productId = UUID.randomUUID();
-        when(productService.getStock(productId)).thenReturn(1);
+        int quantity = 5;
 
-        mockMvc.perform(MockMvcRequestBuilders.post("api/v1/addToCart/" + productId)
-                        .contentType("application/json"))
-                .andExpect(status().isOk());
+        when(productService.getStock(productId)).thenReturn(quantity + 1);
+        when(dtoMapper.mapToCartDTO(productId, quantity)).thenReturn(new AddToCartDTO());
+        // Act
+        productController.addToCart(productId, quantity);
 
+        // Assert
         verify(productService, times(1)).getStock(productId);
+        verify(addToCartProducer, times(1)).send(any(AddToCartDTO.class));
+    }
+
+    @Test
+    public void testAddToCart_OutOfStockException() {
+        // Arrange
+        UUID productId = UUID.randomUUID();
+        int quantity = 10;
+
+        when(productService.getStock(productId)).thenReturn(quantity - 1);
+
+        // Act & Assert
+        OutOfStockException exception = assertThrows(OutOfStockException.class, () -> productController.addToCart(productId, quantity));
+        verify(productService, times(1)).getStock(productId);
+        verify(addToCartProducer, never()).send(any(AddToCartDTO.class));
     }
 
     @Test
@@ -106,7 +138,7 @@ public class ProductControllerTest {
         when(productService.getProduct(any(UUID.class))).thenReturn(newProduct);
         when(productService.updateProduct(any(Product.class))).thenReturn(newProduct);
 
-        mockMvc.perform(put("api/v1/product")
+        mockMvc.perform(put("/api/v1/product")
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(newProduct)))
                 .andExpect(status().isOk())
@@ -123,7 +155,7 @@ public class ProductControllerTest {
         UUID productId = UUID.randomUUID();
         doNothing().when(productService).deleteProduct(productId);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("api/v1/product/" + productId)
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/product/" + productId)
                         .contentType("application/json"))
                 .andExpect(status().isOk());
 
@@ -141,7 +173,7 @@ public class ProductControllerTest {
 
         when(productService.getAllProducts()).thenReturn(productList);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("api/v1/products")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/products")
                         .contentType("application/json"))
                 .andExpect(status().isOk());
 
